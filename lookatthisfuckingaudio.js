@@ -28,7 +28,9 @@ function drawGrid() {
 
     for (var i = 0; i < COLS; i++) {
         for (var j = 0; j < ROWS; j++) {
-            if (gridData[i][j] != null) {
+            var range = gridData[i][j];
+            if (range != null) {
+                ctx.fillStyle = range.color;
                 ctx.beginPath();
                 ctx.arc((i + 1) * colWidth, (j + 1) * rowHeight, 10, 0, Math.PI * 2, true);
                 ctx.fill();
@@ -36,7 +38,7 @@ function drawGrid() {
         }
     }
 
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = '#333333';
     ctx.lineWidth = 3;
     if (draggingGridCoord != null) {
         ctx.beginPath();
@@ -45,10 +47,25 @@ function drawGrid() {
     }
 }
 
+var pitchColors = [[47, 255, 0], [160, 255, 0], [255, 227, 0], [255, 90, 0], [255, 0, 0], [255, 0, 0], [167, 0, 0], [98, 0, 181], [67, 0, 242], [0, 0, 255], [0, 132, 255], [0, 255, 216]];
+
 function drawTimeline() {
     var ctx = timelineElt.getContext('2d');
+
+    var segmentHeight = timelineElt.height / 12;
+
     ctx.strokeStyle = '#aaaaaa';
     ctx.clearRect(0, 0, timelineElt.width, timelineElt.height);
+    for (var i = 0; i < analysis.segments.length; i++) {
+        var segment = analysis.segments[i];
+        for (var j = 0; j < 12; j ++) {
+            var color = pitchColors[j];
+            ctx.fillStyle = 'rgba(' + color.join(',') + ',' + segment.pitches[j] + ')';
+            ctx.fillRect(Math.floor(segment.start * scale) + .5, .5 + segmentHeight * j, Math.floor(segment.duration * scale), segmentHeight);
+        }
+    }
+
+    ctx.strokeStyle = '#aaaaaa';
 
     for (var i = 0; i < ranges.length; i++) {
         var range = ranges[i];
@@ -58,7 +75,7 @@ function drawTimeline() {
 
 function drawDraggingRange() {
     var ctx = draggingRangeElt.getContext('2d');
-    ctx.fillStyle = '#aaaaaa';
+    ctx.fillStyle = draggingRange.color;
     ctx.fillRect(0, 0, Math.floor(draggingRange.duration * scale - 4), timelineElt.height);
 }
 
@@ -120,6 +137,10 @@ function handleTimelineMousedown(e) {
         var range = ranges[i];
         if (position >= range.start && position < range.start + range.duration) {
             draggingRange = range;
+            if (!draggingRange.color) {
+                // TODO calculate color here
+                draggingRange.color = '#66ff66';
+            }
             get_audio(range.start, range.duration, function(audio) {range.audio = audio});
             draggingRangeElt.show();
             draggingRangeElt.width = Math.ceil(range.duration * scale);
