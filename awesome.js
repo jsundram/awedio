@@ -51,6 +51,20 @@ function get_audio(offset, duration, callback)
     audio.play();
 }
 
+function overlap_duration(s1, e1, s2, e2)
+{
+    if (s1 < s2)
+    {
+        if (e1 < e2)
+            return e1 - s2;
+        return e2 - s2;
+    }
+    // else s2 <= s1
+    if (e1 < e2)
+        return e1 - s1;
+    return e2 - s1;
+}
+
 // returns the index of the dominant pitch over the given time-range
 function get_color(start, duration, segments)
 {
@@ -60,13 +74,14 @@ function get_color(start, duration, segments)
     {
         var s = segments[i];
         var e = s.start + s.duration;
-        // overlap
+        
         if (start <= s.start && s.start < end) || (start < e && e < end) || (s.start <= start && end <= e) )
         {
+            var overlap = overlap_duration(start, end, s.start, e);
             for (var j = 0; j < 12; j++)
             {
                 // TODO: weight with loudness and percentage overlap.
-                pitches[j] += s.pitches[j];
+                pitches[j] += (overlap / duration) * s.timbre[0] * s.pitches[j];
             }
         }
     }
