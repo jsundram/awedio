@@ -2,7 +2,10 @@
 <head>
 <style type="text/css">
 #timeline_wrapper {
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: visible;
+    padding: 0 0 10px 0;
+    margin-bottom: 10px;
 }
 
 #dragging_range {
@@ -11,18 +14,32 @@
 </style>
 <script src="prototype1.6.1.js" type="text/javascript"></script>
 <script src="cheating.js" type="text/javascript"></script>
+<script type="text/javascript" src="awesome.js"></script>
+</head>
+<body>
+<audio id="player" src="badromance.ogg" onaudiowritten="audioWritten(event);"></audio>
 
 <div id="timeline_wrapper">
-<canvas width="8000" height="60" id="timeline"></canvas>
+<canvas width="10000" height="60" id="timeline"></canvas>
 </div>
 
-<canvas width="640" height="480" id="grid"></canvas>
+<select id="range_type">
+<option>bars</option>
+<option>beats</option>
+<option>tatums</option>
+<option>segments</option>
+<option>sections</option>
+</select>
+<button id="play_button">play</button><br/>
+
+<canvas width="1300" height="480" id="grid"></canvas>
 <canvas width="10" height="60" id="dragging_range"></canvas>
 <script src="lookatthisfuckingaudio.js" type="text/javascript"></script>
 <script type="text/javascript">
-var trackLength = cheating.track.duration;
-var ranges = cheating.segments;
+var analysis = cheating;
+var trackLength = analysis.track.duration;
+var ranges = analysis.beats;
 $(document).observe('dom:loaded', function() {init();});
 </script>
-
+</body>
 </html>
