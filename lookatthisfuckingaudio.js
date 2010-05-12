@@ -161,6 +161,11 @@ function handleGridClick(e) {
     var gridX = e.pointerX() - gridPos.left;
     var gridY = e.pointerY() - gridPos.top;
     var coord = getCoord(gridX, gridY);
+    if (gridData[coord[1]][coord[0]] != null) {
+        gridData[coord[1]][coord[0]] = null;
+        drawGrid();
+        return;
+    }
     for (var i = coord[1] - 1; i >= 0; i--) {
         if (gridData[i][coord[0]]) {
             gridData[coord[1]][coord[0]] = gridData[i][coord[0]];
