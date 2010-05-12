@@ -1,13 +1,28 @@
 <html>
-    <head>
-        <script type="text/javascript" src="awesome.js"></script>
-    </head>
-    
-    <body>
-        <audio id="player" src="test.ogg" controls onaudiowritten="audioWritten(event);"></audio>
-        <pre id="debug"></pre>
-        
-        
-    </body>
-    
+<head>
+<style type="text/css">
+#timeline_wrapper {
+    overflow: scroll;
+}
+
+#dragging_range {
+    position: absolute;
+}
+</style>
+<script src="prototype1.6.1.js" type="text/javascript"></script>
+<script src="cheating.js" type="text/javascript"></script>
+
+<div id="timeline_wrapper">
+<canvas width="8000" height="60" id="timeline"></canvas>
+</div>
+
+<canvas width="640" height="480" id="grid"></canvas>
+<canvas width="10" height="60" id="dragging_range"></canvas>
+<script src="lookatthisfuckingaudio.js" type="text/javascript"></script>
+<script type="text/javascript">
+var trackLength = cheating.track.duration;
+var ranges = cheating.segments;
+$(document).observe('dom:loaded', function() {init();});
+</script>
+
 </html>
