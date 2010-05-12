@@ -1,5 +1,5 @@
-var ROWS = 4;
-var COLS = 16;
+var ROWS = 5;
+var COLS = 16 + 1;
 
 function drawGrid() {
     var ctx = gridElt.getContext('2d');
@@ -8,8 +8,8 @@ function drawGrid() {
     ctx.strokeStyle = '#aaaaaa';
     ctx.lineWidth = 1;
     // DRAW COLS
-    for (var i = 0; i < COLS; i++) {
-        var x = Math.floor((i + 1) * colWidth) + .5;
+    for (var i = 0; i < COLS - 1; i++) {
+        var x = Math.floor((i + 2) * colWidth) + .5;
         ctx.beginPath();
         ctx.moveTo(x, rowHeight / 2);
         ctx.lineTo(x, gridElt.height - rowHeight / 2);
@@ -224,7 +224,7 @@ function playGrid() {
     var audioOutput = new Audio();
     audioOutput.mozSetup(2, 44100, 1);
 
-    for (var i = 0; i < COLS; i++) {
+    for (var i = 1; i < COLS; i++) {
         var samples = getColumnAudio(i);
         var buffered = audioOutput.mozWriteAudio(samples.length, samples);
     }
