@@ -6,6 +6,7 @@ function drawGrid() {
     ctx.clearRect(0, 0, gridElt.width, gridElt.height);
 
     ctx.strokeStyle = '#aaaaaa';
+    ctx.lineWidth = 1;
     // DRAW COLS
     for (var i = 0; i < COLS; i++) {
         var x = Math.floor((i + 1) * colWidth) + .5;
@@ -16,6 +17,7 @@ function drawGrid() {
     }
 
     // DRAW ROWS
+    ctx.fillStyle = '#333333';
     for (var i = 0; i < ROWS; i++) {
         var y = Math.floor((i + 1) * rowHeight) + .5;
         ctx.beginPath();
@@ -34,10 +36,12 @@ function drawGrid() {
         }
     }
 
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
     if (draggingGridCoord != null) {
         ctx.beginPath();
         ctx.arc((draggingGridCoord[1] + 1) * colWidth, (draggingGridCoord[0] + 1) * rowHeight, 14, 0, Math.PI * 2, true);
-        ctx.fill();
+        ctx.stroke();
     }
 }
 
@@ -54,6 +58,7 @@ function drawTimeline() {
 
 function drawDraggingRange() {
     var ctx = draggingRangeElt.getContext('2d');
+    ctx.fillStyle = '#aaaaaa';
     ctx.fillRect(0, 0, Math.floor(draggingRange.duration * scale - 4), timelineElt.height);
 }
 
