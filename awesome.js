@@ -50,3 +50,33 @@ function get_audio(offset, duration, callback)
     audio.extractSamples = frames;
     audio.play();
 }
+
+// returns the index of the dominant pitch over the given time-range
+function get_color(start, duration, segments)
+{
+    var end = start + duration;
+    pitches = [0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0];
+    for (var i = 0; i < segments.length; i++)
+    {
+        var s = segments[i];
+        var e = s.start + s.duration;
+        // overlap
+        if (start <= s.start && s.start < end) || (start < e && e < end))
+        {
+            for (var j = 0; j < 12; j++)
+            {
+                // TODO: weight with loudness and percentage overlap.
+                pitches[j] += s.pitches[j];
+            }
+        }
+    }
+    
+    var max_index = 0;
+    for (var k = 0; k < 12; k++)
+    {
+        if (pitches[max_index] < pitches[k])
+            max_index = k;
+    }
+    
+    return max_index;
+}
