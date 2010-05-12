@@ -75,7 +75,7 @@ function get_color(start, duration, segments)
         var s = segments[i];
         var e = s.start + s.duration;
         
-        if (start <= s.start && s.start < end) || (start < e && e < end) || (s.start <= start && end <= e) )
+        if ((start <= s.start && s.start < end) || (start < e && e < end) || (s.start <= start && end <= e) )
         {
             var overlap = overlap_duration(start, end, s.start, e);
             for (var j = 0; j < 12; j++)
