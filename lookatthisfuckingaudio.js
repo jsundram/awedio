@@ -220,6 +220,7 @@ function getColumnAudio(columnIndex) {
 }
 
 function playGrid() {
+    columnSamples = 44100 * 2 * parseFloat($('column_seconds').value);
     var audioOutput = new Audio();
     audioOutput.mozSetup(2, 44100, 1);
 
