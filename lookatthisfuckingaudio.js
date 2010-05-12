@@ -1,3 +1,6 @@
+var COLOR_TIMELINE = true;
+var COLOR_GRID = true;
+
 var ROWS = 5;
 var COLS = 16 + 1;
 
@@ -56,12 +59,14 @@ function drawTimeline() {
 
     ctx.strokeStyle = '#aaaaaa';
     ctx.clearRect(0, 0, timelineElt.width, timelineElt.height);
-    for (var i = 0; i < analysis.segments.length; i++) {
-        var segment = analysis.segments[i];
-        for (var j = 0; j < 12; j ++) {
-            var color = pitchColors[j];
-            ctx.fillStyle = 'rgba(' + color.join(',') + ',' + segment.pitches[j] + ')';
-            ctx.fillRect(Math.floor(segment.start * scale) + .5, .5 + segmentHeight * j, Math.floor(segment.duration * scale), segmentHeight);
+    if (COLOR_TIMELINE) {
+        for (var i = 0; i < analysis.segments.length; i++) {
+            var segment = analysis.segments[i];
+            for (var j = 0; j < 12; j ++) {
+                var color = pitchColors[j];
+                ctx.fillStyle = 'rgba(' + color.join(',') + ',' + segment.pitches[j] + ')';
+                ctx.fillRect(Math.floor(segment.start * scale) + .5, .5 + segmentHeight * j, Math.floor(segment.duration * scale), segmentHeight);
+            }
         }
     }
 
@@ -92,6 +97,8 @@ var draggingGridCoord = null;
 var gridData;
 
 var columnSamples = 44100 * 2 * .5;
+
+
 
 function init() {
     gridElt = $('grid');
@@ -138,8 +145,13 @@ function handleTimelineMousedown(e) {
         if (position >= range.start && position < range.start + range.duration) {
             draggingRange = range;
             if (!draggingRange.color) {
-                // TODO calculate color here
-                draggingRange.color = '#66ff66';
+                if (COLOR_GRID) {
+                    var color = pitchColors[get_color(range.start, range.duration, analysis.segments)].join(',');
+                    draggingRange.color = 'rgb(' + color + ')';
+                }
+                else {
+                    draggingRange.color = '#333333';
+                }
             }
             get_audio(range.start, range.duration, function(audio) {range.audio = audio});
             draggingRangeElt.show();
@@ -242,11 +254,14 @@ function getColumnAudio(columnIndex) {
 
 function playGrid() {
     columnSamples = 44100 * 2 * parseFloat($('column_seconds').value);
+    var loops = parseInt($('loop_count').value);
     var audioOutput = new Audio();
     audioOutput.mozSetup(2, 44100, 1);
 
-    for (var i = 1; i < COLS; i++) {
-        var samples = getColumnAudio(i);
-        var buffered = audioOutput.mozWriteAudio(samples.length, samples);
+    for (var l = 0; l < loops; l++) {
+        for (var i = 1; i < COLS; i++) {
+            var samples = getColumnAudio(i);
+            var buffered = audioOutput.mozWriteAudio(samples.length, samples);
+        }
     }
 }
