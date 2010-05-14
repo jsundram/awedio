@@ -84,6 +84,7 @@ function drawDraggingRange() {
     ctx.fillRect(0, 0, Math.floor(draggingRange.duration * scale - 4), timelineElt.height);
 }
 
+var audioElt;
 var timelineElt;
 var gridElt;
 var draggingRangeElt;
@@ -99,11 +100,12 @@ var gridData;
 var columnSamples = 44100 * 2 * .5;
 
 
-
 function init() {
     gridElt = $('grid');
     timelineElt = $('timeline');
     draggingRangeElt = $('dragging_range');
+
+    audioElt = $('player');
 
     scale = timelineElt.width / trackLength;
 
@@ -153,7 +155,7 @@ function handleTimelineMousedown(e) {
                     draggingRange.color = '#333333';
                 }
             }
-            get_audio(range.start, range.duration, function(audio) {range.audio = audio});
+            get_audio(audioElt, range.start, range.duration, function(audio) {range.audio = audio});
             draggingRangeElt.show();
             draggingRangeElt.width = Math.ceil(range.duration * scale);
             drawDraggingRange();

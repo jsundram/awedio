@@ -6,11 +6,11 @@ audioOutput.mozSetup(2, 44100, 1);
 
 function audioWritten(event)
 {
+    audio = event.target;
     if (!audio.extractSamples) {
         return;
     }
 
-    audio = event.target;
     // sample data is obtained using samples.item(n)
     samples = event.mozFrameBuffer;
     var out = [];
@@ -37,9 +37,8 @@ function audioWritten(event)
 }
 
 // offset and duration in seconds
-function get_audio(offset, duration, callback)
+function get_audio(audio, offset, duration, callback)
 {
-    audio = document.getElementById("player");
     audio.volume = 0;
     audio.buffer = [];
     audio.currentTime = offset; // seek
